@@ -70,3 +70,13 @@ security vulnerabilities, but the generally shoddy state of the library and lack
 something that was never finished to begin with does not inspire confidence. The project has a
 number of open issues that may never be fixed, most notably, the support for overriding default
 type converters appears to be broken in the most recently published release.
+
+## Other libraries
+
+* [codemonstur/simplexml](https://github.com/codemonstur/simplexml) is another XML library also
+  named SimpleXML, seems easy to use, lightweight, and in active development. However recent
+  versions only support Java 19, which makes it a non-starter on Android at this time.
+* [Jakarta XML Binding (JAXB)](https://javaee.github.io/jaxb-v2/) used to be the default XML
+  framework embedded into Java, meaning it has a lot of features and excellent documentation. It's
+  also not compatible with Android by default, [though people have made it work](https://stackoverflow.com/questions/5461127/using-jaxb-with-google-android),
+  driven by the need for compatibility with legacy systems.
