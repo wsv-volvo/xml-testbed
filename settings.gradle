@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "XML Testbed"
-include ':simplexml'
+include ':simplexml', ':xmlutil'

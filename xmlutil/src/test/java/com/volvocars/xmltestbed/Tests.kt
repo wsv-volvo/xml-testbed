@@ -4,12 +4,12 @@ import com.volvocars.xmltestbed.model.TestDetailDto
 import com.volvocars.xmltestbed.model.TestDto
 import com.volvocars.xmltestbed.model.TestEnum
 import com.volvocars.xmltestbed.model.TestItemDto
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import nl.adaptivity.xmlutil.serialization.XML
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
-import org.simpleframework.xml.core.Persister
-import org.simpleframework.xml.stream.Format
-import java.io.StringWriter
 
 class Tests {
     @Test
@@ -23,7 +23,7 @@ class Tests {
                 floatNumber = 3.14f,
                 enumValue = TestEnum.ALPHA
             ),
-            items = arrayListOf(
+            items = listOf(
                 TestItemDto("one", 1),
                 TestItemDto("two", 2)
             )
@@ -38,8 +38,8 @@ class Tests {
                 "<enum>ALPHA</enum>" +
                 "</detail>" +
                 "<items>" +
-                "<item id=\"one\" value=\"1\"/>" +
-                "<item id=\"two\" value=\"2\"/>" +
+                "<item id=\"one\" value=\"1\" />" +
+                "<item id=\"two\" value=\"2\" />" +
                 "</items>" +
                 "</test>"
 
@@ -131,10 +131,8 @@ class Tests {
     }
 
     private inline fun <reified T> deserialize(source: String): T =
-        Persister().read(T::class.java, source)
+        XML().decodeFromString(source)
 
-    private fun <T> serialize(obj: T): String = with(StringWriter()) {
-        Persister(Format(0)).write(obj, this)
-        this.toString()
-    }
+    private inline fun <reified T> serialize(obj: T): String =
+        XML().encodeToString(obj)
 }
