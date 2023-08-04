@@ -47,3 +47,26 @@ See the [issue tracker](https://github.com/pdvrieze/xmlutil/issues). At this tim
 security vulnerabilities. The project README file calls out that additional testing is needed, and
 as the library is relatively new, issues should be expected to pop up from time to time. Using this
 library would require developers to pay attention and stay up to date with new releases.
+
+## tikxml
+
+Uses the [tikxml](https://github.com/Tickaroo/tikxml) library. This is a very lightweight library
+which appears to be pretty popular and well-used. Sadly, it has been left in a somewhat sorry 
+state after several years of no maintenance, having quite a number of unfixed issues - the most
+recent version isn't even published anywhere. Due to unstable ordering of elements, tikxml
+can't pass a roundtrip test.
+
+### Usage
+
+Usage is less straightforward than other libraries because tikxml requires additional configuration,
+and does not support all primitive types (neither enums nor floats are supported by default). There
+are no convenience methods that take strings or string buffers. Tikxml relies on kapt annotation
+processing, so the project must include the kapt plugin.
+
+### Known issues
+
+See the [issue tracker](https://github.com/Tickaroo/tikxml/issues). At this time there are no known
+security vulnerabilities, but the generally shoddy state of the library and lack of maintenance for
+something that was never finished to begin with does not inspire confidence. The project has a
+number of open issues that may never be fixed, most notably, the support for overriding default
+type converters appears to be broken in the most recently published release.

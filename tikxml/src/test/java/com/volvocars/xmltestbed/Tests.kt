@@ -1,12 +1,11 @@
 package com.volvocars.xmltestbed
 
+import com.tickaroo.tikxml.TikXml
 import com.volvocars.xmltestbed.model.TestDetailDto
 import com.volvocars.xmltestbed.model.TestDto
 import com.volvocars.xmltestbed.model.TestEnum
 import com.volvocars.xmltestbed.model.TestItemDto
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import nl.adaptivity.xmlutil.serialization.XML
+import okio.Buffer
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -20,10 +19,10 @@ class Tests {
                 id = "1",
                 bool = true,
                 intNumber = 47,
-                floatNumber = 3.14f,
+                floatNumber = 3.14,
                 enumValue = TestEnum.ALPHA
             ),
-            items = listOf(
+            items = arrayListOf(
                 TestItemDto("one", 1),
                 TestItemDto("two", 2)
             )
@@ -38,8 +37,8 @@ class Tests {
                 "<enum>ALPHA</enum>" +
                 "</detail>" +
                 "<items>" +
-                "<item id=\"one\" value=\"1\" />" +
-                "<item id=\"two\" value=\"2\" />" +
+                "<item id=\"one\" value=\"1\"/>" +
+                "<item id=\"two\" value=\"2\"/>" +
                 "</items>" +
                 "</test>"
 
@@ -91,7 +90,7 @@ class Tests {
                 assertEquals("2", id)
                 assertEquals(true, bool)
                 assertEquals(74, intNumber)
-                assertEquals(6.28f, floatNumber)
+                assertEquals(6.28, floatNumber)
                 assertEquals(TestEnum.GAMMA, enumValue)
             }
             assertEquals(2, items!!.size)
@@ -130,9 +129,22 @@ class Tests {
         }
     }
 
-    private inline fun <reified T> deserialize(source: String): T =
-        XML().decodeFromString(source)
+    private inline fun <reified T> deserialize(source: String): T {
+        val buffer = Buffer()
+        buffer.write(source.toByteArray(Charsets.UTF_8))
+        return TikXml.Builder()
+            .addTypeConverter(TestEnum::class.java, TestEnumTypeConverter())
+            .build()
+            .read(buffer, T::class.java)
+    }
 
-    private inline fun <reified T> serialize(obj: T): String =
-        XML().encodeToString(obj)
+    private fun <T> serialize(obj: T): String {
+        val buffer = Buffer()
+        TikXml.Builder()
+            .writeDefaultXmlDeclaration(false)
+            .addTypeConverter(TestEnum::class.java, TestEnumTypeConverter())
+            .build()
+            .write(buffer, obj)
+        return buffer.readString(Charsets.UTF_8)
+    }
 }
